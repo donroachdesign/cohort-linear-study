@@ -1,14 +1,26 @@
 @import "tailwindcss";
 
 /*
- * Linear (Orbiter) token spec, extracted from real design-teardown sources
- * (Identity Forge's "Linear design system, read as constraints"), not
- * guessed. See README.md for the full source list and caveats — Linear has
- * no official published design system, so this is a best-effort
- * reconstruction from observation, same as everyone else's.
+ * Linear (Orbiter) token spec. Dark values extracted from real
+ * design-teardown sources (Identity Forge's "Linear design system, read as
+ * constraints"), not guessed. Light values are a reasoned extrapolation from
+ * Linear's own description of its light theme as "a warmer gray that still
+ * feels crisp, but less saturated" (linear.app/now/how-we-redesigned-the-linear-ui)
+ * plus the same surface/border/text structure as the dark side — no scraped
+ * exact hex values were available for light mode, so treat these as
+ * best-effort, not extracted-and-verified like the dark palette. Tag colors
+ * are darkened versions of the dark-mode set, re-picked to clear 4.5:1 text
+ * contrast against the light canvas (verified: teal and green needed to move
+ * two steps darker than a naive hue-for-hue swap). See README.md for sourcing
+ * notes.
+ *
+ * tag-amber is a status-severity color, not part of the tags-only set above —
+ * see README.md "Status color vs. severity color" for why Draft/Beta/Open
+ * deliberately does NOT use a red/yellow/green stoplight scale, and why
+ * amber (not coral) marks "in progress," leaving coral reserved for actual
+ * negative outcomes (refunds, destructive actions).
  */
-@theme {
-  /* Color: near-black canvas, one step lighter surface, hairline borders. */
+:root {
   --color-canvas: #08090a;
   --color-surface: #0f1011;
   --color-border: #23252a;
@@ -25,6 +37,46 @@
   --color-tag-coral: #f87171;
   --color-tag-green: #4ade80;
 
+  /* Status-severity, not a tag color: "in progress / needs attention," never a error/danger signal. */
+  --color-tag-amber: #fbbf24;
+}
+
+[data-theme='light'] {
+  --color-canvas: #fbfbfa;
+  --color-surface: #f3f3f2;
+  --color-border: #e3e3e0;
+  --color-text-primary: #1c1c1f;
+  --color-text-secondary: #6b6f76;
+
+  --color-accent: #5e6ad2;
+  --color-on-accent: #ffffff;
+
+  --color-tag-violet: #7c3aed;
+  --color-tag-teal: #0f766e;
+  --color-tag-coral: #dc2626;
+  --color-tag-green: #15803d;
+  --color-tag-amber: #b45309;
+}
+
+/* `inline` makes Tailwind reference these custom properties at the point of
+   use instead of baking a value into a new :root rule — the latter is what
+   creates a self-referencing cycle when the token name on the left and the
+   var() on the right are identical. This indirection is what lets
+   [data-theme="light"] above swap every token's runtime value at once. */
+@theme inline {
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-accent: var(--color-accent);
+  --color-on-accent: var(--color-on-accent);
+  --color-tag-violet: var(--color-tag-violet);
+  --color-tag-teal: var(--color-tag-teal);
+  --color-tag-coral: var(--color-tag-coral);
+  --color-tag-green: var(--color-tag-green);
+  --color-tag-amber: var(--color-tag-amber);
+
   /* Radius: clustered at two steps, never larger. */
   --radius-control: 6px;
   --radius-container: 12px;
@@ -34,7 +86,7 @@
 
 /* No box-shadow utilities are used anywhere in this study on purpose —
    Linear's elevation model is a surface-color step plus a hairline border
-   (0.5px, sub-pixel), never a shadow. */
+   (0.5px, sub-pixel), never a shadow, in both themes. */
 body {
   background: var(--color-canvas);
   color: var(--color-text-primary);
