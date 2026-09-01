@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cohort — Linear Study
 
-## Getting Started
+A design-learning exercise, not a client or job-application deliverable. This
+takes the same course-detail-page content and information architecture from
+the [Cohort take-home](https://github.com/donroachdesign/cohort-takehome)
+(built with Astryx, Meta's internal design system) and rebuilds the UI layer
+from scratch — hand-authored Tailwind components — against a token spec
+extracted from Linear's actual product, for practice reading a real interface
+and turning it into a buildable system.
 
-First, run the development server:
+## Why this exists
 
-```bash
+Linear has no official published design system (no public token package,
+component library, or docs site — confirmed via search, not assumed). Every
+"Linear design system" resource online is a third-party reconstruction from
+observing the product. This study is one more entry in that category: an
+attempt to extract a real, specific spec from credible teardowns and actually
+build with it, rather than eyeballing "looks kind of like Linear."
+
+## Token spec (extracted, not guessed)
+
+Source: [Identity Forge — "The Linear design system, read as constraints"](https://identityforge.io/learn/linear-design-system)
+
+- **Color:** near-black canvas (`#08090a`), one-step-lighter surface (`#0f1011`),
+  hairline borders (`#23252a`). One accent color, used only on primary buttons
+  and active nav — nowhere else. Small categorical set (violet/teal/coral/green)
+  reserved for tags only.
+- **Typography:** Inter, weights capped at 400–510 (no true 700 bold anywhere
+  in the interface). Letter-spacing tightens at larger sizes, loosens at small
+  label sizes.
+- **Spacing:** 8px base scale (8/16/32/64...).
+- **Radius:** 6px on controls, 12px on containers — never larger.
+- **Elevation:** no drop shadows anywhere. Depth is communicated by a surface
+  color step plus a 0.5px hairline border, nothing else.
+- **Hard constraints observed:** no gradients, no box-shadows, no second
+  accent color, no font-weight above 510.
+
+## What's reused vs. rebuilt
+
+- **Reused as-is:** `src/lib/data.ts` — the mock course content and lifecycle
+  states (Draft / Beta / Open).
+- **Rebuilt from scratch:** every component. No Astryx, no component library
+  — plain Tailwind utilities driven by the token spec above, as a deliberate
+  practice rep at authoring atomic components (button, card, badge, nav) by
+  hand rather than installing them.
+
+## Run it
+
+```
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Status
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Scaffolding stage — token spec wired into Tailwind, content copied over, no
+page components built yet.

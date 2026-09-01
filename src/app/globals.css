@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Linear (Orbiter) token spec, extracted from real design-teardown sources
+ * (Identity Forge's "Linear design system, read as constraints"), not
+ * guessed. See README.md for the full source list and caveats — Linear has
+ * no official published design system, so this is a best-effort
+ * reconstruction from observation, same as everyone else's.
+ */
+@theme {
+  /* Color: near-black canvas, one step lighter surface, hairline borders. */
+  --color-canvas: #08090a;
+  --color-surface: #0f1011;
+  --color-border: #23252a;
+  --color-text-primary: #f7f8f8;
+  --color-text-secondary: #8a8f98;
+
+  /* Single accent, used only on primary buttons and active nav — nowhere else. */
+  --color-accent: #5e6ad2;
+  --color-on-accent: #ffffff;
+
+  /* Small categorical set, reserved for tags only. */
+  --color-tag-violet: #8b5cf6;
+  --color-tag-teal: #14b8a6;
+  --color-tag-coral: #f87171;
+  --color-tag-green: #4ade80;
+
+  /* Radius: clustered at two steps, never larger. */
+  --radius-control: 6px;
+  --radius-container: 12px;
+
+  --font-sans: var(--font-inter), -apple-system, "Segoe UI", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* No box-shadow utilities are used anywhere in this study on purpose —
+   Linear's elevation model is a surface-color step plus a hairline border
+   (0.5px, sub-pixel), never a shadow. */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  /* Inter weight is capped at 510 across this whole study — no true bold. */
+  font-weight: 400;
 }
