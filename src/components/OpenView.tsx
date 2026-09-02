@@ -37,6 +37,12 @@ function RevenueChart({ data }: { data: OpenCourseData['weeklyRevenue'] }) {
   return (
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+        <defs>
+          <linearGradient id="revenueBarGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#5a0add" stopOpacity={0.4} />
+            <stop offset="100%" stopColor="#5a0add" stopOpacity={1} />
+          </linearGradient>
+        </defs>
         <CartesianGrid vertical={false} stroke="var(--color-border)" />
         <XAxis dataKey="week" tick={{ fontSize: 12, fill: 'var(--color-text-secondary)' }} axisLine={false} tickLine={false} />
         <YAxis
@@ -46,11 +52,8 @@ function RevenueChart({ data }: { data: OpenCourseData['weeklyRevenue'] }) {
           tickLine={false}
           width={40}
         />
-        {/* Data-viz color is a deliberate carve-out from the "accent used only
-            on primary buttons/nav" rule — charts need their own palette, and
-            tag-teal keeps it out of the reserved accent color. */}
         <Tooltip content={<RevenueChartTooltip />} cursor={{ fill: 'var(--color-surface)' }} />
-        <Bar dataKey="revenue" fill="var(--color-tag-teal)" radius={[3, 3, 0, 0]} isAnimationActive={false} />
+        <Bar dataKey="revenue" fill="url(#revenueBarGradient)" radius={[3, 3, 0, 0]} isAnimationActive={false} />
       </BarChart>
     </ResponsiveContainer>
   );

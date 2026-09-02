@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Star, StarHalf } from 'lucide-react';
 import { Card } from './ui/Card';
-import { StatusIcon, STATE_LABEL } from './StatusIcon';
+import { StatusIcon, STATE_LABEL, STATE_PILL_CLASSES } from './StatusIcon';
 import type { CourseState } from '@/lib/data';
 
 function StarRating({ value, count, note }: { value: number; count: number; note?: string }) {
@@ -80,7 +80,9 @@ export function CourseHeader({
         <div className="flex items-center gap-2.5">
           <StatusIcon state={state} size={16} />
           <h1 className="text-xl font-medium text-text-primary">{title}</h1>
-          <span className="text-xs text-text-secondary">{STATE_LABEL[state]}</span>
+          <span className={`rounded-control px-2 py-0.5 text-xs font-medium ${STATE_PILL_CLASSES[state].selected}`}>
+            {STATE_LABEL[state]}
+          </span>
         </div>
         {rating && <StarRating value={rating.value} count={rating.count} note={rating.note} />}
         <p className="text-[13px] text-text-secondary">

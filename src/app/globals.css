@@ -1,24 +1,34 @@
 @import "tailwindcss";
 
 /*
- * Linear (Orbiter) token spec. Dark values extracted from real
+ * Dark theme: Linear (Orbiter) token spec, extracted from real
  * design-teardown sources (Identity Forge's "Linear design system, read as
- * constraints"), not guessed. Light values are a reasoned extrapolation from
- * Linear's own description of its light theme as "a warmer gray that still
- * feels crisp, but less saturated" (linear.app/now/how-we-redesigned-the-linear-ui)
- * plus the same surface/border/text structure as the dark side — no scraped
- * exact hex values were available for light mode, so treat these as
- * best-effort, not extracted-and-verified like the dark palette. Tag colors
- * are darkened versions of the dark-mode set, re-picked to clear 4.5:1 text
- * contrast against the light canvas (verified: teal and green needed to move
- * two steps darker than a naive hue-for-hue swap). See README.md for sourcing
- * notes.
+ * constraints"), not guessed. See README.md for sourcing notes.
  *
- * tag-amber is a status-severity color, not part of the tags-only set above —
+ * Light theme: an experiment swapping in Cloudflare's Kumo design system
+ * instead of a Linear extrapolation, to compare the two directly rather than
+ * guess at Linear's light mode. Every value below is either a literal Kumo
+ * token or, where Kumo's own value is tuned for use as a fill/background
+ * rather than as text, the same hue/chroma darkened along its OKLCH curve
+ * until it clears 4.5:1 against this canvas (Kumo's badge and brand colors
+ * are generated for their own, slightly different canvas — verifying against
+ * ours rather than assuming their contrast carries over). Source:
+ * https://github.com/cloudflare/kumo/blob/main/packages/kumo/src/styles/theme-kumo.css
+ * See README.md "Light theme" for the full mapping and rationale.
+ *
+ * tag-amber marks the Beta lifecycle stage ("in progress," not an error) —
  * see README.md "Status color vs. severity color" for why Draft/Beta/Open
- * deliberately does NOT use a red/yellow/green stoplight scale, and why
- * amber (not coral) marks "in progress," leaving coral reserved for actual
- * negative outcomes (refunds, destructive actions).
+ * deliberately does NOT use a red/yellow/green stoplight scale. By request,
+ * this now uses Cloudflare's actual brand/logo orange (#f6821f) rather than
+ * their badge-orange categorical token — a deliberate exception worth
+ * flagging: earlier in this file's history the brand orange was explicitly
+ * kept OUT of the UI (Cloudflare itself reserves it for logo/marketing
+ * moments and uses a separate blue for interactive elements) in favor of the
+ * categorical token, on the reasoning that lifecycle stages shouldn't borrow
+ * identity color any more than they should borrow severity color. This
+ * reverses that call for the sake of the visual comparison; it's still not a
+ * severity/alert color (that's coral's job), just no longer a strictly
+ * categorical one either.
  */
 :root {
   --color-canvas: #08090a;
@@ -37,25 +47,39 @@
   --color-tag-coral: #f87171;
   --color-tag-green: #4ade80;
 
-  /* Status-severity, not a tag color: "in progress / needs attention," never a error/danger signal. */
-  --color-tag-amber: #fbbf24;
+  /* Cloudflare's literal brand/logo orange, not badge-orange — see file
+     header for why that's a deliberate exception. Still not a severity
+     color; coral is still the only alert-family hue in this app. */
+  --color-tag-amber: #f6821f;
 }
 
+/* Cloudflare Kumo, light mode. Literal tokens: canvas (kumo-canvas), surface
+   (kumo-elevated), border (kumo-hairline), text-primary (kumo-default),
+   text-secondary (kumo-subtle), accent (kumo-brand — their functional
+   interactive blue), tag-violet (badge-purple), tag-coral (badge-red).
+   tag-teal/green are Kumo's badge-teal/badge-green hue+chroma, darkened
+   (their values are tuned as fills, not text) to clear 4.5:1 here. tag-amber
+   is Cloudflare's literal brand-orange (#f6821f, see file header), used
+   as-is by request even though it only clears 2.5:1 against this canvas —
+   well under the 4.5:1 text minimum every other token here is held to (it's
+   literal text color on the "Needs video" badge) and under the 3:1 minimum
+   for its graphical uses (StatusIcon ring, star fill). Flagged rather than
+   silently exempted. */
 [data-theme='light'] {
-  --color-canvas: #fbfbfa;
-  --color-surface: #f3f3f2;
-  --color-border: #e3e3e0;
-  --color-text-primary: #1c1c1f;
-  --color-text-secondary: #6b6f76;
+  --color-canvas: #fbfbfb;
+  --color-surface: #f8f8f8;
+  --color-border: #e9e9e9;
+  --color-text-primary: #18181b;
+  --color-text-secondary: #737373;
 
-  --color-accent: #5e6ad2;
+  --color-accent: #056dff;
   --color-on-accent: #ffffff;
 
-  --color-tag-violet: #7c3aed;
-  --color-tag-teal: #0f766e;
-  --color-tag-coral: #dc2626;
-  --color-tag-green: #15803d;
-  --color-tag-amber: #b45309;
+  --color-tag-violet: #9810fa;
+  --color-tag-teal: #008075;
+  --color-tag-coral: #e7000b;
+  --color-tag-green: #008453;
+  --color-tag-amber: #f6821f;
 }
 
 /* `inline` makes Tailwind reference these custom properties at the point of
@@ -82,6 +106,24 @@
   --radius-container: 12px;
 
   --font-sans: var(--font-inter), -apple-system, "Segoe UI", sans-serif;
+
+  /* Linear animates only GPU-composited properties (transform/opacity),
+     never anything that triggers layout, and keeps durations short —
+     their own tokens are --speed-quickTransition: .1s and
+     --speed-regularTransition: .25s. This sits between the two: quick
+     enough to feel instant, present enough to read as a fade. Applied only
+     to transient overlay UI (dropdown, dialogs) — the same class of
+     elements Linear itself animates on appearance. */
+  --animate-fade-in: fade-in 0.15s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* No box-shadow utilities are used anywhere in this study on purpose —

@@ -23,7 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} h-full antialiased`}
+      // The theme-init script below sets data-theme on this element before
+      // hydration runs (by design, to avoid a flash of the wrong theme) —
+      // React would otherwise flag that as a mismatch since it doesn't know
+      // the script made the change. This is the standard escape hatch for
+      // exactly that case (same approach next-themes uses).
+      suppressHydrationWarning
+    >
       <head>
         {/* Runs before paint so a stored light-mode preference doesn't flash
             dark first — data-theme defaults to dark (unset) otherwise. */}

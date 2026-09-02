@@ -1,5 +1,5 @@
 const fillClasses = {
-  accent: 'bg-accent',
+  accent: 'bg-[#5a0add]',
   green: 'bg-tag-green',
 } as const;
 

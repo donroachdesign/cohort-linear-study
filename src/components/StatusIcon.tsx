@@ -46,3 +46,13 @@ export const STATE_LABEL: Record<CourseState, string> = {
   beta: 'Beta',
   open: 'Open',
 };
+
+// Shared pill treatment: each state's own tint, at two strengths so a
+// selected/current instance can read stronger than an idle one. Tailwind
+// scans source for literal class names, so every combination is spelled out
+// rather than built from a template string.
+export const STATE_PILL_CLASSES: Record<CourseState, { selected: string; unselected: string }> = {
+  draft: { selected: 'bg-text-secondary/25 text-text-primary', unselected: 'bg-text-secondary/10 text-text-secondary' },
+  beta: { selected: 'bg-tag-amber/30 text-text-primary', unselected: 'bg-tag-amber/15 text-text-secondary' },
+  open: { selected: 'bg-tag-green/30 text-text-primary', unselected: 'bg-tag-green/15 text-text-secondary' },
+};

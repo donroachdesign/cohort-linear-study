@@ -37,17 +37,32 @@ Source: [Identity Forge — "The Linear design system, read as constraints"](htt
 
 ## Light theme
 
-Linear ships both a dark and light theme (toggle in-app, or follow system).
-The dark palette above is extracted from teardown sources; no equivalent
-scraped hex values were available for light mode, so those tokens are a
-reasoned extrapolation from Linear's own description of its light theme as
-"a warmer gray that still feels crisp, but less saturated" plus the same
-surface/border/text structure, not a second extraction — flagged here rather
-than presented as equally sourced. Tag colors were darkened from their
-dark-mode values and verified at ≥4.5:1 text contrast against the light
-canvas (teal and green both needed two shade-steps darker than a naive
-hue-matched swap to clear that bar). Toggle lives top-right in the app bar;
-preference persists to `localStorage` and a blocking script in `layout.tsx`
+The dark theme above is Linear's, extracted from teardown sources. Light
+mode is a deliberate experiment rather than a Linear extrapolation: instead
+of guessing at Linear's light palette from a one-line description, it swaps
+in [Cloudflare's Kumo design system](https://github.com/cloudflare/kumo/blob/main/packages/kumo/src/styles/theme-kumo.css)
+to see how it compares directly, side by side, on the same layout. So the two
+themes are intentionally from two different real design systems, not two
+modes of one system — toggle between them (top-right, next to the avatar) to
+compare Linear's dark UI against Cloudflare's light one.
+
+Mapping, Kumo → this app's tokens:
+
+| This app        | Kumo token                     | Note |
+|------------------|--------------------------------|------|
+| `canvas`         | `kumo-canvas`                  | literal |
+| `surface`        | `kumo-elevated`                | literal |
+| `border`         | `kumo-hairline`                | literal |
+| `text-primary`   | `kumo-default` (text)          | literal |
+| `text-secondary` | `kumo-subtle` (text)           | literal |
+| `accent`         | `kumo-brand`                   | Kumo's functional interactive blue — **not** their `#f6821f` marketing/logo orange, which they deliberately keep out of the UI itself |
+| `tag-violet`     | `badge-purple`                 | literal |
+| `tag-coral`      | `badge-red`                    | literal |
+| `tag-teal`       | `badge-teal` hue/chroma        | darkened — Kumo's value is tuned as a fill, not text; verified ≥4.5:1 here |
+| `tag-green`      | `badge-green` hue/chroma       | darkened, same reason |
+| `tag-amber`      | brand orange `#f6821f`         | used as-is, by request — only 2.5:1 against this canvas, below the 4.5:1 text / 3:1 graphical minimums every other token here clears; see "Status color vs. severity color" |
+
+Preference persists to `localStorage`; a blocking script in `layout.tsx`
 applies it before first paint to avoid a flash of the wrong theme.
 
 ## Status color vs. severity color
@@ -67,8 +82,34 @@ stages represent danger.
 
 So: Draft stays neutral gray, Open stays green (matches both "go" and
 Notion's "Done"), and Beta uses **amber**, not coral — "in progress, still
-forming," not an error. Coral/`tag-coral` is reserved exclusively for actual
-negative signals elsewhere in the app: refunded transactions, the destructive
+forming," not an error.
+
+Amber's exact sourcing has moved twice, worth tracking honestly rather than
+smoothing over: it started as a generic Tailwind amber (too close to coral
+in hue, easy to misread as "a milder red"); then Cloudflare's Kumo
+*badge-orange* categorical token (correct in spirit — a tag color, not a
+severity color — and further from coral on the hue wheel); and now, by
+request, Cloudflare's literal brand/logo orange, `#f6821f`. That last move
+is a deliberate exception worth flagging: Cloudflare itself keeps that exact
+color out of its own product UI (their interactive accent is a separate
+blue, `kumo-brand`), reserving the orange for logo/marketing moments only —
+using it here for a lifecycle stage is closer to borrowing *identity* color
+than *categorical* color. It's still not a severity color, so it doesn't
+undo the core argument above, but it's a different kind of exception than
+"just another tag hue," made for the sake of this side-by-side comparison
+rather than strict internal consistency.
+
+In light mode specifically, `#f6821f` is used unmodified, at the user's
+request, even though it only clears 2.5:1 against the light canvas —
+noticeably under the 4.5:1 text minimum (it's literal text color on the
+"Needs video" badge) and the 3:1 graphical minimum (the Beta `StatusIcon`
+ring, the star-rating fill) that every other token in this file was checked
+against. Dark mode isn't affected — `#f6821f` clears 7.7:1 there, comfortably
+past both bars. This is the one accessibility exception in the whole
+palette; it's called out here rather than quietly passed off as compliant.
+
+Coral/`tag-coral` remains the only severity-family hue in the app, reserved
+exclusively for actual negative signals: refunded transactions, the destructive
 Pause-enrollment confirmation, the Beta view's Drop-off hotspot metric, and
 the low-rating warning in the Promote-to-Open dialog — things that are
 genuinely worth an alert, unlike simply being mid-lifecycle.
